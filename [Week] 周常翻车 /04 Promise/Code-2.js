@@ -1,6 +1,9 @@
 //
 // Promise-Code 2
 //
+// 1. 容器保存promiseStatus状态值
+// 2. 容器保存promiseValue的值
+// 
 function Promise(executor) {
   this.promiseStatus = 'pending';
   this.promiseValue = undefined;

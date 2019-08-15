@@ -1,6 +1,8 @@
 //
 // Promise-Code 5-A
 //
+// 1. then实际上是个异步方法（微任务）
+// 
 function Promise(executor) {
   this.promiseStatus = 'pending';
   this.promiseValue = undefined;

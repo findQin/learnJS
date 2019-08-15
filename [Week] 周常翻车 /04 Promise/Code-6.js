@@ -2,6 +2,8 @@
 // Promise-Code 6
 //
 // 1. resolve填入promise情况
+//    |- 两个promie状态（innerP->resolved p->pending）
+//    |- pending状态存了then信息，在后续resolve状态执行
 // 2. 执行出错，会走入reject逻辑
 function Promise(executor) {
   this.promiseStatus = 'pending';
@@ -15,9 +17,9 @@ function Promise(executor) {
     arr.splice(0, arr.length);
   }
   const resolve = (resolvedValue) => {
-    // if (resolvedValue instanceof Promise) {
-    //   return resolvedValue.then(resolve, reject);
-    // }
+    if (resolvedValue instanceof Promise) {
+      return resolvedValue.then(resolve, reject);
+    }
     if (this.isPending()) {
       this.promiseStatus = 'resolved';
       this.promiseValue = resolvedValue;
@@ -50,8 +52,10 @@ Promise.prototype.then = function(onfulfilled = data => data, onrejected = error
   }
 }
 
-// test
-let promise = new Promise((resolve, reject) => {
+//
+// test 1
+// 
+var promise = new Promise((resolve, reject) => {
   setTout(() => {
     resolve('data')
   }, 2000)
@@ -62,3 +66,17 @@ promise.then(data => {
 }, error => {
   console.log('got error from promise', error)
 })
+
+//
+// test 2
+//
+var innerP = new Promise((resolve, reject) => {
+    console.log('innerP');
+    resolve('innerResolve');
+});
+innerP.then(value => console.log('inner' + value));
+var p = new Promise((resolve, reject) => {
+  // reject('reject');
+  resolve(innerP);
+});
+p.then(value => console.log(value), rej => console.log('rej:' + rej));

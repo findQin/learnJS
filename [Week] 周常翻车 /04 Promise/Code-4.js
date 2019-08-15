@@ -1,6 +1,8 @@
 //
 // Promise-Code 4
 //
+// 1. promise可以挂在多个then方法，状态变更后依次执行
+// 
 function Promise(executor) {
   this.promiseStatus = 'pending';
   this.promiseValue = undefined;

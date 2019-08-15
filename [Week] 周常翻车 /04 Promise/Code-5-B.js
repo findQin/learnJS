@@ -5,6 +5,9 @@
 // var p = new Promise(resolve => resolve('A'));p;debugger;
 // 此时resolved值已经设置在Promise容器中，而在reolsve中使用setTimeout则无法实现
 //
+// 1. then实际上是个异步方法（微任务）
+// 状态变更是同步，但调用方法是异步
+// 
 function Promise(executor) {
   this.promiseStatus = 'pending';
   this.promiseValue = undefined;
@@ -47,7 +50,8 @@ Promise.prototype.then = function(onfulfilled = data => data, onrejected = error
 
 // test
 let promise = new Promise((resolve, reject) => {
-  resolve('data')
+  resolve('data');
+  console.log('after resolve')
 })
 
 promise.then(data => {

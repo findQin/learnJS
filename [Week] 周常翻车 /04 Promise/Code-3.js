@@ -1,6 +1,8 @@
 //
 // Promise-Code 3
 //
+// 1. Promise状态修改后具有不可变性
+// 2. 设置默认错误处理函数
 function Promise(executor) {
   this.promiseStatus = 'pending';
   this.promiseValue = undefined;
