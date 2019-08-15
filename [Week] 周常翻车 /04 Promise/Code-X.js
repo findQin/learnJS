@@ -71,3 +71,41 @@ Promise.race = function(taskList) {
     }
   });
 }
+
+// MutationObserver
+var observer = new MutationObserver(function(recoder) {
+  debugger;
+});
+var node = document.createElement('div');
+observer.observe(node, {attributes: true});
+node.setAttribute('tag', 'A');
+
+//
+// https://www.promisejs.org/
+// .then is to .done as .map is to .forEach
+// https://github.com/then/promise
+// https://github.com/kriskowal/asap
+// https://github.com/kriskowal/asap/blob/master/browser-raw.js
+//
+// Safari 6 and 6.1 for desktop, iPad, and iPhone are the only browsers that
+// have WebKitMutationObserver but not un-prefixed MutationObserver.
+// Must use `global` or `self` instead of `window` to work in both frames and web
+// workers. `global` is a provision of Browserify, Mr, Mrs, or Mop.
+
+/* globals self */
+var scope = typeof global !== "undefined" ? global : self;
+var BrowserMutationObserver = scope.MutationObserver || scope.WebKitMutationObserver;
+function makeRequestCallFromMutationObserver(callback) {
+  var toggle = 1;
+  var observer = new BrowserMutationObserver(callback);
+  var node = document.createTextNode("");
+  observer.observe(node, {characterData: true});
+  return function requestCall() {
+      toggle = -toggle;
+      node.data = toggle;
+  };
+}
+
+var callback = () => {console.log('callback');}
+var func = makeRequestCallFromMutationObserver(callback);
+func();
